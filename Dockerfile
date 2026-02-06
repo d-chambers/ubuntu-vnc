@@ -2,22 +2,8 @@ FROM registry.forge.inrae.fr/teledec/ubuntu-qgis-vnc:latest-chromium
 
 USER root
 
-# Install base utilities
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget \
-    ca-certificates \
-    vim \
-    tmux \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install uv (latest)
 RUN wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" UV_NO_MODIFY_PATH=1 sh
-
-# Install Miniforge (latest)
-RUN wget -qO /tmp/miniforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh" && \
-    bash /tmp/miniforge.sh -b -p /opt/conda && \
-    rm -f /tmp/miniforge.sh && \
-    /opt/conda/bin/conda config --system --set auto_activate_base false
 
 # Ensure Miniforge is on PATH for all users
 ENV PATH="/opt/conda/bin:${PATH}"
