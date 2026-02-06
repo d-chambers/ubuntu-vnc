@@ -2,9 +2,22 @@ FROM registry.forge.inrae.fr/teledec/ubuntu-qgis-vnc:latest-chromium
 
 USER root
 
+# Install uv (latest)
+RUN wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" UV_NO_MODIFY_PATH=1 sh
+
+# Install Miniforge (latest)
+RUN wget -qO /tmp/miniforge.sh "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-$(uname -m).sh" && \
+    bash /tmp/miniforge.sh -b -p /opt/conda && \
+    rm -f /tmp/miniforge.sh && \
+    /opt/conda/bin/conda config --system --set auto_activate_base false
+
+# Ensure Miniforge is on PATH for all users
+ENV PATH="/opt/conda/bin:${PATH}"
+
+# Use the repo's Onyxia init script
 # Get Onyxia init script
-RUN wget https://raw.githubusercontent.com/InseeFrLab/images-datascience/refs/heads/main/base/scripts/onyxia-init.sh -O /opt/onyxia-init.sh && \
-    chmod +x /opt/onyxia-init.sh
+RUN wget https://raw.githubusercontent.com/InseeFrLab/images-datascience/refs/heads/main/base/scripts/onyxia-init.sh -O /opt/onyxia-init.sh
+RUN chmod +x /opt/onyxia-init.sh
 
 ## Allow sudo without password
 RUN echo "headless     ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
@@ -21,4 +34,3 @@ ENV NOVNC_HEARTBEAT=30
 USER headless
 
 WORKDIR /home/headless/work
-
