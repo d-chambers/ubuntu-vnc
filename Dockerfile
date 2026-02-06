@@ -2,6 +2,14 @@ FROM registry.forge.inrae.fr/teledec/ubuntu-qgis-vnc:latest-chromium
 
 USER root
 
+# Install base utilities
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    ca-certificates \
+    vim \
+    tmux \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install uv (latest)
 RUN wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" UV_NO_MODIFY_PATH=1 sh
 
@@ -15,8 +23,7 @@ RUN wget -qO /tmp/miniforge.sh "https://github.com/conda-forge/miniforge/release
 ENV PATH="/opt/conda/bin:${PATH}"
 
 # Use the repo's Onyxia init script
-# Get Onyxia init script
-RUN wget https://raw.githubusercontent.com/InseeFrLab/images-datascience/refs/heads/main/base/scripts/onyxia-init.sh -O /opt/onyxia-init.sh
+RUN wget https://github.com/d-chambers/ubuntu-vnc/blob/main/onyxia-init.sh -O /opt/onyxia-init.sh
 RUN chmod +x /opt/onyxia-init.sh
 
 ## Allow sudo without password
