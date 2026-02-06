@@ -5,6 +5,9 @@ USER root
 # Install uv (latest)
 RUN wget -qO- https://astral.sh/uv/install.sh | env UV_INSTALL_DIR="/usr/local/bin" UV_NO_MODIFY_PATH=1 sh
 
+# Just a test
+RUN touch /opt/bob.txt
+
 # Ensure Miniforge is on PATH for all users
 ENV PATH="/opt/conda/bin:${PATH}"
 
